@@ -13,7 +13,10 @@
 * make (`apt install make`)
 * docker / docker-compose (`apt install docker-compose`)
 
-### Сборка
+### Сборка Local
 
-* `make docker-build`
 * `make update`
+* 
+### Сборка Prod
+
+* `make update-prod`
