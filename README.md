@@ -1,6 +1,5 @@
 ## Локальный запуск (Linux / macOS):
 
-
 ##### Local SSL (https://github.com/FiloSottile/mkcert)
 `mkcert -key-file key.pem -cert-file cert.pem localhost && mv -t docker/nginx/local/ssl/ key.pem cert.pem`
 ##### /etc/hosts

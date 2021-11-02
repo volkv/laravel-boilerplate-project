@@ -13,6 +13,11 @@ docker-build:
 storage-link:
 	make exec cmd="php artisan storage:link"
 
+pull: git-pull view-cache-clear
+
+view-cache-clear:
+		make exec cmd="php artisan view:clear"
+
 git-pull:
 	git pull
 
