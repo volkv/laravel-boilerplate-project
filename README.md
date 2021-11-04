@@ -19,3 +19,7 @@
 ### Сборка Prod
 
 * `make update-prod`
+
+### TODO
+
+- [ ] Общий docker-compose
