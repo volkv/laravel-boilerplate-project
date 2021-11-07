@@ -15,11 +15,12 @@ storage-link:
 
 pull: git-pull view-cache-clear
 
-view-cache-clear:
-		make exec cmd="php artisan view:clear"
-
 git-pull:
 	git pull
+
+perm-views:
+	sudo chown -R www-data:www-data storage/framework/views/*
+	sudo chmod -R 775  storage/framework/views/*
 
 update: docker-stop-all git-pull perm docker-build composer-update npm-update npm-install npm-prod cache
 update-prod: git-pull perm docker-build composer-update-prod npm-update npm-install npm-prod cache
