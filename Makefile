@@ -94,3 +94,9 @@ log-scheduler:
 
 log-nginx:
 	docker-compose logs --tail="50" nginx
+
+backup-db:
+	docker-compose exec  -u root  -T sql bash -c  "pg_dump -Fc db > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
+
+restore-db:
+	docker-compose exec  -u root  -T sql bash -c  "pg_restore -d db -j 4 /backups/backup.gz"
