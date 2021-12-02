@@ -82,3 +82,15 @@ seed:
 install:
 	make exec cmd="php artisan storage:link"
 	make exec cmd="php artisan key:generate"
+
+log-queue:
+	docker-compose logs --tail="50" queue-default
+
+log-sql:
+	docker-compose logs --tail="50" sql
+
+log-scheduler:
+	docker-compose logs --tail="50" scheduler
+
+log-nginx:
+	docker-compose logs --tail="50" nginx

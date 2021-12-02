@@ -2,52 +2,12 @@ version: "3"
 
 services:
 
-  php-fpm:
-    image: php-fpm
-    build: ./docker/php-fpm
-    depends_on:
-      - sql
-      - redis
-    volumes:
-      - ./:/var/www
-      - ./storage/docker/php/log:/var/log/php
-      - /var/www/.git
-      - /var/www/.idea
-    environment:
-      CONTAINER_ROLE: app
-      PHP_OPCACHE_ENABLE: 0
-
   nginx:
     build:
-      context: ./docker/nginx
       dockerfile: local/Dockerfile
-    depends_on:
-      - php-fpm
     ports:
       - 8080:443
-    volumes:
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./:/var/www
-      - ./docker/nginx/ssl:/etc/nginx/ssl
-      - ./storage/docker/nginx/logs:/var/log/nginx
 
   sql:
-    image: postgres:latest
-    restart: unless-stopped
-    volumes:
-      - sql:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - 54321:5432
-
-  redis:
-    image: redis:latest
-    ports:
-      - 63791:6379
-
-volumes:
-  sql:
-    driver: local
