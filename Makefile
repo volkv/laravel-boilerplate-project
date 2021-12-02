@@ -18,8 +18,8 @@ pull:
 	sudo chown -R www-data:www-data storage/framework/views/
 	sudo chmod -R 775  storage/framework/views/
 
-update: docker-stop-all git-pull perm docker-build composer-update npm-update npm-install npm-prod cache
-update-prod: git-pull perm docker-build composer-update-prod npm-update npm-install npm-prod cache
+update-local: docker-stop-all pull perm docker-build composer-update npm-update npm-install npm-prod cache
+update-prod: pull perm docker-build composer-update-prod npm-update npm-install npm-prod cache
 
 docker-stop-all:
 	docker stop $$(docker ps -q) || true
