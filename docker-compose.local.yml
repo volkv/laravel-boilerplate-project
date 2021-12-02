@@ -6,8 +6,8 @@ services:
     build:
       dockerfile: local/Dockerfile
     ports:
-      - 8080:443
+      - "8080:443"
 
   sql:
     ports:
-      - 54321:5432
+      - "54321:5432"

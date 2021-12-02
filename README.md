@@ -15,11 +15,9 @@
 ### Сборка Local
 
 * `make update`
-* 
+
 ### Сборка Prod
 
 * `make update-prod`
 
-### TODO
-
-- [ ] Общий docker-compose
+https://localhost:8080/
