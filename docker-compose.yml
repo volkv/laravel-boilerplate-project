@@ -2,60 +2,60 @@ version: "3"
 
 services:
 
-  php-fpm:
-    image: php-fpm
-    build: ./docker/php-fpm
-    depends_on:
-      - sql
-      - redis
-    volumes:
-      - ./:/var/www
-      - ./storage/docker/php/log:/var/log/php
-      - /var/www/.git
-      - /var/www/.idea
-    environment:
-      CONTAINER_ROLE: app
+    php-fpm:
+        image: php-fpm
+        build: ./docker/php-fpm
+        depends_on:
+            - sql
+            - redis
+        volumes:
+            - ./:/var/www
+            - ./storage/docker/php/log:/var/log/php
+            - /var/www/.git
+            - /var/www/.idea
+        environment:
+            CONTAINER_ROLE: app
 
-  scheduler:
-    image: php-fpm
-    restart: unless-stopped
-    depends_on:
-      - php-fpm
-    volumes:
-      - ./:/var/www
-    environment:
-      CONTAINER_ROLE: scheduler
+    scheduler:
+        image: php-fpm
+        restart: unless-stopped
+        depends_on:
+            - php-fpm
+        volumes:
+            - ./:/var/www
+        environment:
+            CONTAINER_ROLE: scheduler
 
-  queue-default:
-    image: php-fpm
-    restart: unless-stopped
-    depends_on:
-      - php-fpm
-    volumes:
-      - ./:/var/www
-    environment:
-      CONTAINER_ROLE: queue-default
+    queue-default:
+        image: php-fpm
+        restart: unless-stopped
+        depends_on:
+            - php-fpm
+        volumes:
+            - ./:/var/www
+        environment:
+            CONTAINER_ROLE: queue-default
 
-  nginx:
-    build:
-      context: ./docker/nginx
-    depends_on:
-      - php-fpm
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/ssl:/etc/nginx/ssl
-      - ./storage/docker/nginx/logs:/var/log/nginx
+    nginx:
+        build:
+            context: ./docker/nginx
+        depends_on:
+            - php-fpm
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/ssl:/etc/nginx/ssl
+            - ./storage/docker/nginx/logs:/var/log/nginx
 
-  sql:
-    image: postgres:latest
-    restart: unless-stopped
-    volumes:
-      - ./storage/docker/sql/volume:/var/lib/postgresql/data
-      - ./storage/docker/sql/backups:/backups
-    environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    sql:
+        image: postgres:latest
+        restart: unless-stopped
+        volumes:
+            - ./storage/docker/sql/volume:/var/lib/postgresql/data
+            - ./storage/docker/sql/backups:/backups
+        environment:
+            - POSTGRES_DB=${DB_DATABASE}
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
 
-  redis:
-    image: redis:latest
+    redis:
+        image: redis:latest
