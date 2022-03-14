@@ -1,4 +1,4 @@
-FROM php:8.1.0-fpm
+FROM php:8.1.3-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -32,7 +32,6 @@ RUN docker-php-ext-install pdo pdo_pgsql pgsql
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
 
-
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
 # Clear cache
@@ -44,6 +43,8 @@ RUN chown www-data:www-data /npm
 RUN chown www-data:www-data /composer
 
 RUN npm set cache "/npm" -g
+
+RUN npm install -g npm
 
 RUN echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen
 RUN locale-gen
