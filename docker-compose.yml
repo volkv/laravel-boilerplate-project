@@ -50,7 +50,7 @@ services:
         image: postgres:latest
         restart: unless-stopped
         volumes:
-            - ./storage/docker/sql/volume:/var/lib/postgresql/data
+            - pgdata:/var/lib/postgresql/data
             - ./storage/docker/sql/backups:/backups
         environment:
             - POSTGRES_DB=${DB_DATABASE}
@@ -59,3 +59,6 @@ services:
 
     redis:
         image: redis:latest
+
+volumes:
+    pgdata:
