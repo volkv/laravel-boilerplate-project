@@ -18,8 +18,8 @@ pull:
 	sudo chown -R www-data:www-data storage/framework/views/
 	sudo chmod -R 775  storage/framework/views/
 
-update-local: docker-stop-all pull perm docker-build composer-update npm-update npm-install npm-prod cache
-update-prod: pull perm docker-build composer-update-prod npm-update npm-install npm-prod cache
+update: docker-stop-all pull perm docker-build composer-update npm-install npm-prod cache
+update-prod: pull perm docker-build composer-update-prod npm-install npm-prod cache
 
 docker-stop-all:
 	docker stop $$(docker ps -q) || true
@@ -99,4 +99,4 @@ backup-db:
 	docker-compose exec  -u root  -T sql bash -c  "pg_dump -Fc db > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
 
 restore-db:
-	docker-compose exec  -u root  -T sql bash -c  "pg_restore -d db -j 4 /backups/backup.gz"
+	docker-compose exec  -u root  -T sql bash -c  "pg_restore --clean -d db -j 4 /backups/backup.gz"
