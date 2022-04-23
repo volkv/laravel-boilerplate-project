@@ -6,9 +6,6 @@ if (!mix.inProduction()) {
     });
 }
 
-mix.webpackConfig({
-    devtool: "inline-source-map"
-});
 
 mix.js('resources/js/app.js', 'public/js')
     .less('resources/less/app.less', 'public/css')
@@ -16,6 +13,9 @@ mix.js('resources/js/app.js', 'public/js')
     .version()
 
 if (!mix.inProduction()) {
+    mix.webpackConfig({
+        devtool: "inline-source-map"
+    });
     mix.sourceMaps()
 }
 
