@@ -100,3 +100,13 @@ backup-db:
 
 restore-db:
 	docker-compose exec  -u root  -T sql bash -c  "pg_restore --clean -d db -j 4 /backups/backup.gz"
+
+include .env
+
+pull-db:
+	scp root@${SERVER_IP}:${GITHUB_REPOSITORY}/storage/docker/sql/backups/backup.gz storage/docker/sql/backups/backup.gz
+
+pull-restore-db: pull-db restore-db
+
+deploy:
+	ssh root@${SERVER_IP} 'cd ${GITHUB_REPOSITORY} && git reset --hard && make after-pull-perm && git pull https://${GITHUB_CREDENTIALS}@github.com/cq-esports/${GITHUB_REPOSITORY}.git && make after-pull-perm && make update-prod'
