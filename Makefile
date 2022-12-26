@@ -55,7 +55,7 @@ npm-update:
 	make exec cmd="npm update"
 
 npm-prod:
-	make exec cmd="npm run prod"
+	make exec cmd="npm run build"
 
 npm-watch:
 	make exec cmd="npm run watch"

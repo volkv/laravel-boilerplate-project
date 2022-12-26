@@ -47,7 +47,7 @@ services:
             - ./storage/docker/nginx/logs:/var/log/nginx
 
     sql:
-        image: postgres:14
+        image: postgres:15
         restart: unless-stopped
         volumes:
             - pgdata:/var/lib/postgresql/data
