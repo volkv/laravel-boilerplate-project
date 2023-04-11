@@ -2,6 +2,10 @@ version: "3"
 
 services:
 
+  php-fpm:
+    environment:
+      - PHP_OPCACHE_ENABLE=${PHP_OPCACHE:-0}
+
   nginx:
     build:
       dockerfile: local/Dockerfile
@@ -11,3 +15,12 @@ services:
   sql:
     ports:
       - "54321:5432"
+
+  selenium:
+    image: 'selenium/standalone-chrome:latest'
+    volumes:
+      - '/dev/shm:/dev/shm'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"

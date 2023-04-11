@@ -12,14 +12,8 @@ class ClearCache extends Command
      *
      * @var string
      */
-    protected $signature = 'volkv:cache';
+    protected $signature = 'volkv:cache {--noide}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Tools';
 
     /**
      * Create a new command instance.
@@ -43,9 +37,12 @@ class ClearCache extends Command
         $this->execShellWithPrettyPrint('php artisan config:clear');
 
         if (App::environment() == 'local') {
-            $this->execShellWithPrettyPrint('php artisan ide-helper:generate');
-            $this->execShellWithPrettyPrint('php artisan ide-helper:models -W');
-            $this->execShellWithPrettyPrint('php artisan ide-helper:meta');
+            if (!$this->option('noide')){
+                $this->execShellWithPrettyPrint('php artisan ide-helper:generate');
+                $this->execShellWithPrettyPrint('php artisan ide-helper:models -W');
+                $this->execShellWithPrettyPrint('php artisan ide-helper:meta');
+            }
+
         } else {
             $this->execShellWithPrettyPrint('php artisan view:cache');
             $this->execShellWithPrettyPrint('php artisan route:cache');
@@ -56,7 +53,7 @@ class ClearCache extends Command
             $this->execShellWithPrettyPrint('php artisan opcache:clear');
         }
 
-        return "Кэш очищен.";
+        return "Cache cleared";
     }
 
     /**

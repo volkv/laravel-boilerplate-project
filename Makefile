@@ -1,5 +1,11 @@
 exec:
+	docker-compose exec php-fpm $$cmd
+
+exec-root:
 	docker-compose exec -u root php-fpm $$cmd
+
+execTTY:
+	docker-compose exec -T  php-fpm $$cmd
 
 docker-up:
 	docker-compose up -d
@@ -49,16 +55,16 @@ composer-install:
 	make exec cmd="composer install"
 
 npm-install:
-	make exec cmd="npm install"
+	make exec-root cmd="npm install"
 
 npm-update:
-	make exec cmd="npm update"
+	make exec-root cmd="npm update"
 
 npm-prod:
-	make exec cmd="npm run build"
+	make exec-root cmd="npm run build"
 
 npm-watch:
-	make exec cmd="npm run watch"
+	make exec-root cmd="npm run watch"
 
 perm:
 	sudo chown -R www-data:www-data .
@@ -66,6 +72,9 @@ perm:
 
 cache:
 	make exec cmd="php artisan volkv:cache"
+
+cache-noide:
+	make execTTY cmd="php artisan volkv:cache --noide"
 
 opcache-clear:
 	make exec cmd="php artisan opcache:clear"
@@ -96,17 +105,38 @@ log-nginx:
 	docker-compose logs --tail="50" nginx
 
 backup-db:
-	docker-compose exec  -u root  -T sql bash -c  "pg_dump -Fc db > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
+	docker-compose exec  -u root  -T sql bash -c  "pg_dump -Fc postgres > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
 
 restore-db:
-	docker-compose exec  -u root  -T sql bash -c  "pg_restore --clean -d db -j 4 /backups/backup.gz"
+	docker-compose exec  -u root  -T sql bash -c  "dropdb --if-exists postgres && createdb postgres && pg_restore --create -d postgres -j 4 /backups/backup.gz"
 
 include .env
 
+push-db:
+	scp -i ~/.ssh/id_rsa docker/volume/postgres/backup.gz root@${SERVER_IP}:${GITHUB_REPOSITORY}/docker/volume/postgres/backup.gz
+
 pull-db:
-	scp root@${SERVER_IP}:${GITHUB_REPOSITORY}/storage/docker/sql/backups/backup.gz storage/docker/sql/backups/backup.gz
+	scp root@${SERVER_IP}:${GITHUB_REPOSITORY}/docker/volume/postgres/backup.gz docker/volume/postgres/backup.gz
 
 pull-restore-db: pull-db restore-db
 
 deploy:
 	ssh root@${SERVER_IP} 'cd ${GITHUB_REPOSITORY} && git reset --hard && make after-pull-perm && git pull https://${GITHUB_CREDENTIALS}@github.com/cq-esports/${GITHUB_REPOSITORY}.git && make after-pull-perm && make update-prod'
+
+_test-pre:
+	make docker-build && \
+	make npm-prod && \
+	make cache-noide
+
+after-test:
+	export PHP_OPCACHE=0 && \
+	make docker-build
+	make cache-noide
+
+_test-all:
+	make exec cmd="/var/www/vendor/phpunit/phpunit/phpunit --configuration /var/www/phpunit.xml /var/www/tests"
+
+_test-feature:
+	make exec cmd="/var/www/vendor/phpunit/phpunit/phpunit --configuration /var/www/phpunit.xml /var/www/tests/Feature"
+
+test: _test-pre _test-all after-test

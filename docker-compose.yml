@@ -10,31 +10,11 @@ services:
             - redis
         volumes:
             - ./:/var/www
-            - ./storage/docker/php/log:/var/log/php
+            - ./docker/volume/php/log:/var/log/php
             - /var/www/.git
             - /var/www/.idea
         environment:
             CONTAINER_ROLE: app
-
-    scheduler:
-        image: php-fpm
-        restart: unless-stopped
-        depends_on:
-            - php-fpm
-        volumes:
-            - ./:/var/www
-        environment:
-            CONTAINER_ROLE: scheduler
-
-    queue-default:
-        image: php-fpm
-        restart: unless-stopped
-        depends_on:
-            - php-fpm
-        volumes:
-            - ./:/var/www
-        environment:
-            CONTAINER_ROLE: queue-default
 
     nginx:
         build:
@@ -44,14 +24,14 @@ services:
         volumes:
             - ./:/var/www
             - ./docker/nginx/ssl:/etc/nginx/ssl
-            - ./storage/docker/nginx/logs:/var/log/nginx
+            - ./docker/volume/nginx/logs:/var/log/nginx
 
     sql:
-        image: postgres:15
+        image: postgres:15.2
         restart: unless-stopped
         volumes:
             - pgdata:/var/lib/postgresql/data
-            - ./storage/docker/sql/backups:/backups
+            - ./docker/volume/postgres:/backups
         environment:
             - POSTGRES_DB=${DB_DATABASE}
             - POSTGRES_USER=${DB_USERNAME}

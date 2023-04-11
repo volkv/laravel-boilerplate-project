@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2.4-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -29,7 +29,7 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
 # NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_19.x | bash - && \
     apt-get install -y nodejs
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
@@ -60,9 +60,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN docker-php-ext-install pdo_mysql zip exif gd simplexml intl dom curl bcmath opcache pcntl gmp
 RUN pecl install redis && docker-php-ext-enable redis
 
-COPY start.sh /usr/local/bin/start
-RUN chmod u+x /usr/local/bin/start
-
 COPY "php.ini" "/usr/local/etc/php/php.ini"
 
 WORKDIR /var/www
@@ -71,5 +68,3 @@ USER www-data
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-
-CMD ["/usr/local/bin/start"]

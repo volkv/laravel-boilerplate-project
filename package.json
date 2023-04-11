@@ -6,7 +6,7 @@
         "watch": "vite build --watch"
     },
     "devDependencies": {
-        "alpinejs": "^3.4.2",
+        "less-loader": "^11.1.0",
         "laravel-vite-plugin": "^0.7.2",
         "vite": "^4.0.0"
     }

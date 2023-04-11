@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+
+  scheduler:
+    image: php-fpm
+    restart: unless-stopped
+    depends_on:
+      - php-fpm
+    volumes:
+      - ./:/var/www
+    command: php /var/www/artisan schedule:run --verbose
+
+  queue-default:
+    image: php-fpm
+    restart: unless-stopped
+    depends_on:
+      - php-fpm
+    volumes:
+      - ./:/var/www
+    command: php /var/www/artisan queue:work --queue=default --verbose --tries=2 --timeout=30

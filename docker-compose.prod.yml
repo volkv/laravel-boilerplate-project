@@ -6,6 +6,10 @@ services:
     environment:
       PHP_OPCACHE_ENABLE: 1
 
+  sql:
+    ports:
+      - 127.0.0.1:5432:5432
+
   nginx:
     build:
       dockerfile: prod/Dockerfile
