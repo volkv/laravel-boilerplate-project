@@ -121,7 +121,7 @@ pull-db:
 pull-restore-db: pull-db restore-db
 
 deploy:
-	ssh root@${SERVER_IP} 'cd ${GITHUB_REPOSITORY} && git reset --hard && make after-pull-perm && git pull https://${GITHUB_CREDENTIALS}@github.com/cq-esports/${GITHUB_REPOSITORY}.git && make after-pull-perm && make update-prod'
+	ssh root@${SERVER_IP} 'cd ${GITHUB_REPOSITORY} && git reset --hard && make after-pull-perm && git pull https://${GITHUB_CREDENTIALS}@github.com/volkv/${GITHUB_REPOSITORY}.git && make after-pull-perm && make update-prod'
 
 _test-pre:
 	make docker-build && \
