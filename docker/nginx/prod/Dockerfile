@@ -1,4 +1,4 @@
-FROM nginx:1.23.4-alpine
+FROM nginx:1.25.4-alpine
 
 RUN apk add --update openssl && \
     rm -rf /var/cache/apk/*

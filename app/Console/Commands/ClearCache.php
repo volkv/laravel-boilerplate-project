@@ -52,7 +52,7 @@ class ClearCache extends Command
         if (config('app.php_opcache_enable')) {
             $this->execShellWithPrettyPrint('php artisan opcache:clear');
         }
-
+        $this->execShellWithPrettyPrint('php artisan queue:restart');
         return "Cache cleared";
     }
 

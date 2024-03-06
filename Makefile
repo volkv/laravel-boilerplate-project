@@ -93,7 +93,7 @@ install:
 	make exec cmd="php artisan key:generate"
 
 log-queue:
-	docker-compose logs --tail="50" queue-default
+	docker-compose logs --tail 50 -f queue-default
 
 log-sql:
 	docker-compose logs --tail="50" sql
@@ -140,3 +140,6 @@ _test-feature:
 	make exec cmd="/var/www/vendor/phpunit/phpunit/phpunit --configuration /var/www/phpunit.xml /var/www/tests/Feature"
 
 test: _test-pre _test-all after-test
+
+cmd-test:
+	make exec-root cmd="php artisan volkv:test"

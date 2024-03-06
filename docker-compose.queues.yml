@@ -19,3 +19,5 @@ services:
     volumes:
       - ./:/var/www
     command: php /var/www/artisan queue:work --queue=default --verbose --tries=2 --timeout=30
+    deploy:
+      replicas: 32

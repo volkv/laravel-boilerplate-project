@@ -1,4 +1,4 @@
-FROM php:8.2.4-fpm
+FROM php:8.3.3-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -29,7 +29,7 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
 # NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_19.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_21.x | bash - && \
     apt-get install -y nodejs
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
