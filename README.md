@@ -2,7 +2,9 @@
 
 ##### Local SSL (https://github.com/FiloSottile/mkcert)
 
-`mkcert -key-file key.pem -cert-file cert.pem localhost && mv -t docker/nginx/local/ssl/ key.pem cert.pem`
+```shell
+mkcert -key-file key.pem -cert-file cert.pem localhost && mv key.pem docker/nginx/local/ssl && mv cert.pem docker/nginx/local/ssl
+```
 
 ##### /etc/hosts
 
@@ -16,11 +18,11 @@
 
 * git (`apt install git`)
 * make (`apt install make`)
-* docker / docker-compose (`apt install docker-compose`)
+* docker (`wget -O- get.docker.com | bash`)
 
 ### Сборка Local
 
-* `make update`
+* `make update-local`
 
 ### Сборка Prod
 

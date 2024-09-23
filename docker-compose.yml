@@ -1,5 +1,3 @@
-version: "3"
-
 services:
 
     php-fpm:
@@ -27,7 +25,7 @@ services:
             - ./docker/volume/nginx/logs:/var/log/nginx
 
     sql:
-        image: postgres:16.2
+        image: postgres:16.4
         restart: unless-stopped
         volumes:
             - pgdata:/var/lib/postgresql/data

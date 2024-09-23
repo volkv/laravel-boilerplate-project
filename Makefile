@@ -1,30 +1,29 @@
 exec:
-	docker-compose exec php-fpm $$cmd
+	docker compose exec php-fpm $$cmd
 
 exec-root:
-	docker-compose exec -u root php-fpm $$cmd
+	docker compose exec -u root php-fpm $$cmd
 
 execTTY:
-	docker-compose exec -T  php-fpm $$cmd
+	docker compose exec -T  php-fpm $$cmd
 
 docker-up:
-	docker-compose up -d
+	docker compose up -d
 
 docker-down:
-	docker-compose down --remove-orphans
+	docker compose down --remove-orphans
 
 docker-build:
-	docker-compose up --build -d
+	docker compose up --build -d
 
 storage-link:
 	make exec cmd="php artisan storage:link"
 
 pull:
 	git pull
-	sudo chown -R www-data:www-data storage/framework/views/
 	sudo chmod -R 775  storage/framework/views/
 
-update: docker-stop-all pull perm docker-build composer-update npm-install npm-prod cache
+update-local: docker-stop-all pull perm docker-build composer-update npm-install npm-prod cache
 update-prod: pull perm docker-build composer-update-prod npm-install npm-prod cache
 
 docker-stop-all:
@@ -67,7 +66,6 @@ npm-watch:
 	make exec-root cmd="npm run watch"
 
 perm:
-	sudo chown -R www-data:www-data .
 	sudo chmod -R 775  .
 
 cache:
@@ -93,22 +91,22 @@ install:
 	make exec cmd="php artisan key:generate"
 
 log-queue:
-	docker-compose logs --tail 50 -f queue-default
+	docker compose logs --tail 50 -f queue-default
 
 log-sql:
-	docker-compose logs --tail="50" sql
+	docker compose logs --tail="50" sql
 
 log-scheduler:
-	docker-compose logs --tail="50" scheduler
+	docker compose logs --tail="50" scheduler
 
 log-nginx:
-	docker-compose logs --tail="50" nginx
+	docker compose logs --tail="50" nginx
 
 backup-db:
-	docker-compose exec  -u root  -T sql bash -c  "pg_dump -Fc postgres > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
+	docker compose exec  -u root  -T sql bash -c  "pg_dump -Fc postgres > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
 
 restore-db:
-	docker-compose exec  -u root  -T sql bash -c  "dropdb --if-exists postgres && createdb postgres && pg_restore --create -d postgres -j 4 /backups/backup.gz"
+	docker compose exec  -u root  -T sql bash -c  "dropdb --if-exists postgres && createdb postgres && pg_restore --create -d postgres -j 4 /backups/backup.gz"
 
 include .env
 
