@@ -21,6 +21,7 @@ storage-link:
 
 pull:
 	git pull
+	sudo chown -R 33:33 storage/framework/views/
 	sudo chmod -R 775  storage/framework/views/
 
 update-local: docker-stop-all pull perm docker-build composer-update npm-install npm-prod cache
@@ -66,6 +67,7 @@ npm-watch:
 	make exec-root cmd="npm run watch"
 
 perm:
+	sudo chown -R 33:33 .
 	sudo chmod -R 775  .
 
 cache:
