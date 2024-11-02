@@ -31,27 +31,21 @@ class ClearCache extends Command
     public function handle()
     {
         $this->execShellWithPrettyPrint('composer dump-autoload -o');
-        $this->execShellWithPrettyPrint('php artisan cache:clear');
-        $this->execShellWithPrettyPrint('php artisan route:clear');
-        $this->execShellWithPrettyPrint('php artisan view:clear');
-        $this->execShellWithPrettyPrint('php artisan config:clear');
 
-        if (App::environment() == 'local') {
-            if (!$this->option('noide')){
-                $this->execShellWithPrettyPrint('php artisan ide-helper:generate');
-                $this->execShellWithPrettyPrint('php artisan ide-helper:models -W');
-                $this->execShellWithPrettyPrint('php artisan ide-helper:meta');
-            }
+        if (App::environment() == 'local' && !$this->option('noide')) {
 
-        } else {
-            $this->execShellWithPrettyPrint('php artisan view:cache');
-            $this->execShellWithPrettyPrint('php artisan route:cache');
-            $this->execShellWithPrettyPrint('php artisan config:cache');
+            $this->execShellWithPrettyPrint('php artisan ide-helper:generate');
+            $this->execShellWithPrettyPrint('php artisan ide-helper:models -W');
+            $this->execShellWithPrettyPrint('php artisan ide-helper:meta');
+
         }
+
+        $this->execShellWithPrettyPrint('php artisan optimize:clear');
 
         if (config('app.php_opcache_enable')) {
             $this->execShellWithPrettyPrint('php artisan opcache:clear');
         }
+
         $this->execShellWithPrettyPrint('php artisan queue:restart');
         return "Cache cleared";
     }
@@ -59,7 +53,7 @@ class ClearCache extends Command
     /**
      * Exec shell with pretty print.
      *
-     * @param  string  $command
+     * @param string $command
      *
      * @return mixed
      */
