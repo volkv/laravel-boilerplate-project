@@ -11,8 +11,6 @@ services:
             - ./docker/volume/php/log:/var/log/php
             - /var/www/.git
             - /var/www/.idea
-        environment:
-            CONTAINER_ROLE: app
 
     nginx:
         build:

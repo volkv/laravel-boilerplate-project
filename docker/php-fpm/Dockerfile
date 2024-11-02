@@ -1,4 +1,4 @@
-FROM php:8.3.11-fpm
+FROM php:8.3.13-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \

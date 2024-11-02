@@ -7,7 +7,11 @@ services:
       - php-fpm
     volumes:
       - ./:/var/www
-    command: php /var/www/artisan schedule:run --verbose
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+    command: "php /var/www/artisan schedule:work"
 
   queue-default:
     image: php-fpm
@@ -16,6 +20,10 @@ services:
       - php-fpm
     volumes:
       - ./:/var/www
-    command: php /var/www/artisan queue:work --queue=default --verbose --tries=2 --timeout=30
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+    command: "php /var/www/artisan queue:work --queue=default --verbose --tries=1 --timeout=30"
     deploy:
-      replicas: 32
+      replicas: 8

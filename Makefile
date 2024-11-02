@@ -7,9 +7,6 @@ exec-root:
 execTTY:
 	docker compose exec -T  php-fpm $$cmd
 
-docker-up:
-	docker compose up -d
-
 docker-down:
 	docker compose down --remove-orphans
 
@@ -19,12 +16,17 @@ docker-build:
 storage-link:
 	make exec cmd="php artisan storage:link"
 
+
 pull:
 	git pull
 	sudo chown -R 33:33 storage/framework/views/
 	sudo chmod -R 775  storage/framework/views/
 
+
 update-local: docker-stop-all pull perm docker-build composer-update npm-install npm-prod cache
+
+setup: key-generate storage-link npm-install npm-prod
+
 update-prod: pull perm docker-build composer-update-prod npm-install npm-prod cache
 
 docker-stop-all:
@@ -36,6 +38,9 @@ key-generate:
 bash:
 	make exec cmd="bash"
 
+bash-root:
+	make exec-root cmd="bash"
+
 npm-dev:
 	make exec cmd="npm run dev"
 
@@ -44,6 +49,12 @@ migrate:
 
 migrate-rollback:
 	make exec cmd="php artisan migrate:rollback"
+
+migrate-fresh:
+	make exec cmd="php artisan migrate:fresh"
+
+seed-db:
+	make exec cmd="php artisan db:seed"
 
 composer-update:
 	make exec cmd="composer update"
@@ -70,7 +81,7 @@ perm:
 	sudo chown -R 33:33 .
 	sudo chmod -R 775  .
 
-cache:
+cache: perm
 	make exec cmd="php artisan volkv:cache"
 
 cache-noide:
@@ -98,6 +109,9 @@ log-queue:
 log-sql:
 	docker compose logs --tail="50" sql
 
+log-access:
+	tail -n50 docker/volume/nginx/logs/access.log
+
 log-scheduler:
 	docker compose logs --tail="50" scheduler
 
@@ -108,7 +122,7 @@ backup-db:
 	docker compose exec  -u root  -T sql bash -c  "pg_dump -Fc postgres > /backups/backup.gz && cp /backups/backup.gz /backups/old/`date +%d-%m-%Y"_"%H_%M_%S`.gz"
 
 restore-db:
-	docker compose exec  -u root  -T sql bash -c  "dropdb --if-exists postgres && createdb postgres && pg_restore --create -d postgres -j 4 /backups/backup.gz"
+	docker compose exec  -u root  -T sql bash -c  "dropdb --force --if-exists postgres && createdb postgres && pg_restore -d postgres -j 4 /backups/backup.gz"
 
 include .env
 
@@ -117,6 +131,9 @@ push-db:
 
 pull-db:
 	scp root@${SERVER_IP}:${GITHUB_REPOSITORY}/docker/volume/postgres/backup.gz docker/volume/postgres/backup.gz
+
+after-pull-perm:
+	sudo chmod -R 775  storage/framework/views/
 
 pull-restore-db: pull-db restore-db
 

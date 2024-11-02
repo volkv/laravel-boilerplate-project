@@ -6,28 +6,12 @@
 
     <title>Laravel</title>
 
+    @vite(['resources/less/app.less', 'resources/js/app.js'])
+
 </head>
 <body>
-
-@if (Route::has('login'))
-    <div>
-        @auth
-            <a href="{{ url('/dashboard') }}">Dashboard</a>
-        @else
-            <a href="{{ route('login') }}">Log in</a>
-
-            @if (Route::has('register'))
-                <a href="{{ route('register') }}">Register</a>
-            @endif
-        @endauth
-    </div>
-@endif
-
-
 <div>
-    Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+    <h1>hello</h1>
 </div>
-
-
 </body>
 </html>
