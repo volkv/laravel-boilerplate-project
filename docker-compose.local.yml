@@ -17,12 +17,3 @@ services:
   sql:
     ports:
       - "54321:5432"
-
-  selenium:
-    image: 'selenium/standalone-chrome:latest'
-    volumes:
-      - '/dev/shm:/dev/shm'
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"

@@ -23,7 +23,7 @@ services:
             - ./docker/volume/nginx/logs:/var/log/nginx
 
     sql:
-        image: postgres:16.4
+        image: postgres:17.4
         restart: unless-stopped
         volumes:
             - pgdata:/var/lib/postgresql/data

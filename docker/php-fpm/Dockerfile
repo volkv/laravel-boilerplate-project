@@ -1,4 +1,4 @@
-FROM php:8.3.13-fpm
+FROM php:8.4.6-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -29,7 +29,7 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
 # NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_21.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
@@ -61,6 +61,7 @@ RUN docker-php-ext-install pdo_mysql zip exif gd simplexml intl dom curl bcmath 
 RUN pecl install redis && docker-php-ext-enable redis
 
 COPY "php.ini" "/usr/local/etc/php/php.ini"
+COPY "www.conf" "/usr/local/etc/php-fpm.d/www.conf"
 
 WORKDIR /var/www
 

@@ -40,7 +40,6 @@ make setup
 
 ```shell
 make npm-watch
-make npm-watch
 ```
 https://localhost:8080/
 
